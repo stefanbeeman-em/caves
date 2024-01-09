@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import React, { useRef, useState } from 'react'
 import { Canvas, useFrame, ThreeElements } from '@react-three/fiber'
 import { CameraControls } from "@react-three/drei"
+import { Cave, randomCaves } from './Caves';
 
 const DEG45 = Math.PI / 4;
 
@@ -26,6 +27,7 @@ function Box(props: ThreeElements['mesh']) {
 
 function App() {
   const cameraControlRef = useRef<CameraControls | null>(null);
+  const caves = randomCaves(20);
   return (
     <>
       <Canvas>
@@ -33,10 +35,9 @@ function App() {
         <ambientLight intensity={Math.PI / 2} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
         <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-        <Box position={[-1.2, 0, 0]} />
-        <Box position={[1.2, 0, 0]} />
-        <Box position={[-1.2, -1.2, 0]} />
-        <Box position={[1.2, 1.2, 0]} />
+        {caves.map((cave: Cave) => (
+          <Box position={[cave.xpos, cave.ypos, cave.zpos]} />
+        ))}
       </Canvas>
     </>
   )
