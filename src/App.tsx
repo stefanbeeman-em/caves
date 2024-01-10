@@ -27,7 +27,7 @@ function Box(props: ThreeElements['mesh']) {
 
 function App() {
   const cameraControlRef = useRef<CameraControls | null>(null);
-  const caves = randomCaves(20);
+  const caves = randomCaves(24);
   return (
     <>
       <Canvas>
