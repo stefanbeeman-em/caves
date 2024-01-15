@@ -2,23 +2,23 @@ export interface Cave {
     xpos: number;
     ypos: number;
     zpos: number;
-    xsize: number;
-    ysize: number;
-    zsize: number;
+    scale: number;
 }
 
-function randomBound(): number {
+function randomPos(): number {
     return ((Math.random() * 7.2) - 3.6)
+}
+
+function randomScale(): number {
+    return ((Math.random() * 3.0))
 }
 
 function randomCave(): Cave {
     return {
-        xpos: randomBound(),
-        ypos: randomBound(),
-        zpos: randomBound(),
-        xsize: 0,
-        ysize: 0,
-        zsize: 0
+        xpos: randomPos(),
+        ypos: randomPos(),
+        zpos: randomPos(),
+        scale: randomScale(),
     }
 }
 
