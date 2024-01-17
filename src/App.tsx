@@ -2,24 +2,34 @@ import * as THREE from 'three';
 import React, { useRef, useState } from 'react'
 import { Canvas, useFrame, ThreeElements } from '@react-three/fiber'
 import { CameraControls } from "@react-three/drei"
-import { Cave, randomCaves } from './Caves';
+import { Cave, CaveType, randomCaves } from './Caves';
 
 const DEG45 = Math.PI / 4;
 
-function Box(props: ThreeElements['mesh']) {
+type BoxMesh = ThreeElements['mesh'] & {color: string, text: string}
+
+const CaveColors = {
+  [CaveType.River]: 'blue',
+  [CaveType.Fault]: 'red',
+  [CaveType.Mine]: 'brown',
+  [CaveType.Bloom]: 'yellow',
+  [CaveType.Fungal]: 'pink',
+  [CaveType.Ruins]: 'grey',
+  [CaveType.Burrow]: 'purple'
+}
+
+function Box(props: BoxMesh) {
   const ref = useRef<THREE.Mesh>(null!)
-  const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
   // useFrame((state, delta) => (ref.current.rotation.x += delta))
   return (
     <mesh
       {...props}
       ref={ref}
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}>
+      onClick={(event) => alert(props.text)}
+      onPointerOver={(event) => false}
+      onPointerOut={(event) => false}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'red' : 'blue'} wireframe={true} />
+      <meshStandardMaterial color={props.color} wireframe={true} />
     </mesh>
   )
 }
@@ -27,6 +37,7 @@ function Box(props: ThreeElements['mesh']) {
 function App() {
   const cameraControlRef = useRef<CameraControls | null>(null);
   const caves = randomCaves(24);
+  const [selected, select] = useState(false)
   return (
     <>
       <Canvas>
@@ -35,7 +46,11 @@ function App() {
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
         <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
         {caves.map((cave: Cave) => (
-          <Box position={[cave.xpos, cave.ypos, cave.zpos]} scale={cave.scale} />
+          <Box
+            position={[cave.xpos, cave.ypos, cave.zpos]}
+            scale={cave.scale} color={CaveColors[cave.type]}
+            text={cave.desc}
+          />
         ))}
       </Canvas>
     </>
