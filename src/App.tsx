@@ -6,7 +6,11 @@ import { Cave, CaveType, randomCaves } from './Caves';
 
 const DEG45 = Math.PI / 4;
 
-type BoxMesh = ThreeElements['mesh'] & {key: number, color: string, label: string}
+type BoxMesh = ThreeElements['mesh'] & {
+  key: number, 
+  color: string, 
+  label: string,
+}
 
 const CaveColors = {
   [CaveType.River]: 'blue',
@@ -20,6 +24,7 @@ const CaveColors = {
 
 function Box(props: BoxMesh) {
   const ref = useRef<THREE.Mesh>(null!)
+  const [showLabel, setShowLabel] = useState(false);
   // useFrame((state, delta) => (ref.current.rotation.x += delta))
   return (
     <Fragment>
@@ -27,14 +32,17 @@ function Box(props: BoxMesh) {
         {...props}
         ref={ref}
         onClick={(event) => alert(props.label)}
-        onPointerOver={(event) => false}
-        onPointerOut={(event) => false}>
+        onPointerOver={(event) => setShowLabel(true)}
+        onPointerOut={(event) => setShowLabel(false)}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color={props.color} wireframe={true} />
       </mesh>
-      <Html center position={props.position}>
-        <div style={{ background: "white", color: props. color }}>{props.label}</div>
-      </Html>
+      {showLabel && (
+        <Html center position={props.position}>
+          <div style={{ fontWeight: "bold", color: props. color }}>{props.label}</div>
+        </Html>
+      )}
+      
     </Fragment>
   )
 }
